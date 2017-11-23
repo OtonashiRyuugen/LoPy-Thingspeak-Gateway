@@ -11,8 +11,8 @@ from network import LoRa
 
 ###start the wifi
 wlan = WLAN(mode=WLAN.STA)
-wlan.connect("NETGEAR18", auth=(WLAN.WPA2, "FamilyJADE"), timeout=5000)
-while not wlan.isconnected(): 
+wlan.connect("", auth=(WLAN.WPA2, ""), timeout=5000) # <--------------- Add SSID and PSWD in the two empty quotes
+while not wlan.isconnected():
      machine.idle()
 print("Connected to Wifi\n")
 
@@ -20,8 +20,8 @@ print("Connected to Wifi\n")
 client = MQTTClient("demo", "mqtt.thingspeak.com", port=1883)
 client.connect()
 thingspeakChannelId = "128609"  # <--- replace with your Thingspeak Channel ID
-thingspeakChannelWriteapi = "R73HJN1DE9YPRD4V" # <--- replace with your Thingspeak Write API Key
-publishPeriodInSec = 30 
+thingspeakChannelWriteapi = "" # <--- replace with your Thingspeak Write API Key
+publishPeriodInSec = 30
 print("client connected\n")
 
 ###setup the lora gateway
@@ -42,7 +42,7 @@ while (True):
         ack_pkg = struct.pack(_LORA_PKG_ACK_FORMAT, device_id, 1, 200)
         lora_sock.send(ack_pkg)
         # note:  string concatenations below follow best practices as described in micropython reference doc
-        credentials = "channels/{:s}/publish/{:s}".format(thingspeakChannelId, thingspeakChannelWriteapi)  
+        credentials = "channels/{:s}/publish/{:s}".format(thingspeakChannelId, thingspeakChannelWriteapi)
         msg = msg.decode('UTF-8')  #convert to a string
         msg = msg.split(',')
         f1 = float(msg[0])
@@ -52,5 +52,5 @@ while (True):
         print(payload)
         client.publish(credentials, payload)
 
-  
-#client.disconnect() 
+
+#client.disconnect()
